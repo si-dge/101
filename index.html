@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>101.ru getListServersChannel</title>
+</head>
+<body>
+	<script type="text/javascript">
+		//https://101.ru/api/channel/getListServersChannel/93/channel
+		function load() {
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				document.getElementById('title').innerHTML = '';
+				document.getElementById('app').innerHTML = '';
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					if (data.status === 1) {
+						data.result.forEach(function (server) {
+							var title = server.titleChannel;
+							var link = server.urlStream;
+							var a = document.createElement('a');
+							a.innerHTML = link;
+							a.href = link;
+							a.target = '_blank';
+							var p = document.createElement('p');
+							p.appendChild(a);
+							document.getElementById('title').innerHTML = title;
+							document.getElementById('app').appendChild(p);
+						});
+					} else {
+						document.getElementById('title').innerHTML = data.result;
+					}
+				}
+			};
+
+			var id = document.getElementById('radio').value;
+			xhttp.open('GET', 'https://101.ru/api/channel/getListServersChannel/'+id+'/channel', true);
+			xhttp.send();
+		}
+	</script>
+	<input id="radio" type="number" value="100">
+	<button type="button" onclick="load()">Get list servers channel</button>
+	<h2 id="title"></h2>
+	<div id="app"></div>
+</body>
+</html>
